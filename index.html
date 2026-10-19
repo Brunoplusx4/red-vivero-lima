@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Red privada de disponibilidad mayorista de plantas en Lima." />
+    <title>Red Vivero Lima | Stock mayorista</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="photos.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#catalogo">Ir al catálogo</a>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Red Vivero Lima, inicio">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span><strong id="brandName">Red Vivero Lima</strong><small>Stock mayorista</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#catalogo">Disponibilidad</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a class="nav-cta" href="#solicitud">Busco planta</a>
+      </nav>
+    </header>
+
+    <main id="inicio">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">RED PRIVADA · LIMA</p>
+          <h1>Encuentra stock mayorista sin llamar a diez viveros.</h1>
+          <p class="hero-text">Conectamos compradores, revendedores y paisajistas con productores de plantas, flores y viveros. Consulta disponibilidad, cantidad y punto de recojo.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#solicitud">Busco una planta</a>
+            <a class="button button-secondary" href="#catalogo">Ver disponibilidad</a>
+          </div>
+          <p class="hero-note">Stock sujeto a confirmación directa del productor.</p>
+        </div>
+        <aside class="hero-card" aria-label="Resumen de operación">
+          <p class="card-label">ACTUALIZACIÓN</p>
+          <strong id="updatedAt">—</strong>
+          <hr />
+          <p><span class="dot"></span> Productores verificados por referencia</p>
+          <p><span class="dot"></span> Separación y pago directo al productor</p>
+          <p><span class="dot"></span> Recojo o transporte coordinado entre las partes</p>
+        </aside>
+      </section>
+
+      <section class="trust-strip" aria-label="Para quién es">
+        <span>Viveros</span><span>Revendedores</span><span>Paisajistas</span><span>Jardineros</span><span>Compradores mayoristas</span>
+      </section>
+
+      <section id="catalogo" class="section catalog-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">DISPONIBILIDAD</p>
+            <h2>Stock referencial</h2>
+            <p>Filtra por categoría o zona. Confirma siempre cantidad, precio y fecha antes de separar.</p>
+          </div>
+          <button id="shareCatalog" class="text-button" type="button">Compartir catálogo</button>
+        </div>
+        <div id="filters" class="filters" aria-label="Filtrar catálogo"></div>
+        <p id="stockCount" class="stock-count"></p>
+        <div id="catalogGrid" class="catalog-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="como-funciona" class="section process-section">
+        <div class="section-heading narrow">
+          <p class="eyebrow">SIN INTERMEDIAR EL DINERO</p>
+          <h2>La red ordena la búsqueda; el negocio se confirma entre comprador y productor.</h2>
+        </div>
+        <ol class="process-grid">
+          <li><span>01</span><h3>Indica lo que buscas</h3><p>Especie, cantidad, tamaño, fecha y distrito.</p></li>
+          <li><span>02</span><h3>Recibe opciones</h3><p>Contrastamos disponibilidad con productores de la red.</p></li>
+          <li><span>03</span><h3>Confirma directamente</h3><p>El productor valida precio, stock, separación y recojo.</p></li>
+          <li><span>04</span><h3>Coordina el traslado</h3><p>Las partes usan su transporte habitual o acuerdan uno.</p></li>
+        </ol>
+      </section>
+
+      <section id="solicitud" class="section request-section">
+        <div class="request-intro">
+          <p class="eyebrow">BUSCO PLANTA</p>
+          <h2>¿Tu proveedor habitual no tiene stock?</h2>
+          <p>Déjanos el detalle. El formulario abre una consulta por WhatsApp; no cobraremos ni pediremos datos bancarios.</p>
+          <div class="request-warning"><strong>Importante:</strong> la solicitud no es una reserva. Una reserva existe solo cuando el productor la confirma.</div>
+        </div>
+        <form id="requestForm" class="request-form">
+          <label>Tu nombre o empresa<input required name="nombre" maxlength="70" autocomplete="name" placeholder="Ej.: Vivero San José" /></label>
+          <label>WhatsApp<input required name="whatsapp" inputmode="tel" maxlength="25" placeholder="Ej.: 999 999 999" /></label>
+          <label>¿Qué planta buscas?<input required name="planta" maxlength="100" placeholder="Ej.: Bugambilia" /></label>
+          <label>Cantidad<input required name="cantidad" maxlength="50" placeholder="Ej.: 80 unidades" /></label>
+          <label>Tamaño / presentación<input name="tamano" maxlength="80" placeholder="Ej.: mediana, bolsa 10 L" /></label>
+          <label>¿Para cuándo la necesitas?<input name="fecha" maxlength="80" placeholder="Ej.: esta semana" /></label>
+          <label>Distrito para recojo o entrega<input name="zona" maxlength="80" placeholder="Ej.: Lurín / Rímac" /></label>
+          <label>¿Aceptas alternativas?<select name="alternativas"><option>Sí, puedo evaluar alternativas</option><option>No, solo la especie solicitada</option></select></label>
+          <label class="form-full">Notas adicionales<textarea name="notas" maxlength="300" rows="3" placeholder="Ej.: compra al por mayor, necesito factura, color específico..."></textarea></label>
+          <label class="checkbox form-full"><input required type="checkbox" name="consentimiento" /> Entiendo que el stock, precio, pago y transporte se confirman directamente con el productor.</label>
+          <button class="button button-primary form-full" type="submit">Enviar consulta por WhatsApp</button>
+        </form>
+      </section>
+
+      <section class="section supplier-section">
+        <div>
+          <p class="eyebrow">SOY PRODUCTOR</p>
+          <h2>¿Quieres que compradores mayoristas conozcan tu stock?</h2>
+          <p>Participa con información actualizada, fotos reales y condiciones claras. La red solo publica proveedores validados por referencia.</p>
+        </div>
+        <button id="supplierButton" class="button button-dark" type="button">Quiero participar como productor</button>
+      </section>
+    </main>
+
+    <footer>
+      <span id="footerName">Red Vivero Lima</span>
+      <span>·</span>
+      <span>Canal de consulta mayorista</span>
+      <span>·</span>
+      <button id="footerWhatsApp" class="footer-link" type="button">WhatsApp</button>
+    </footer>
+
+    <dialog id="productDialog" class="product-dialog">
+      <button class="dialog-close" aria-label="Cerrar">×</button>
+      <div id="dialogContent"></div>
+    </dialog>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
