@@ -4,7 +4,7 @@
 */
 window.RED_VIVERO_CONFIG = {
   nombre: "Red Vivero Lima",
-  whatsappOperador: "51928861433", // REEMPLAZAR antes de publicar
+  whatsappOperador: "51903227351", // REEMPLAZAR antes de publicar
   fechaActualizacion: "19 de octubre de 2026 · 2:00 p. m.",
   zonas: ["Lurín", "Villa El Salvador", "Acho / Rímac"],
   productos: [
