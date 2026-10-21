@@ -1,30 +1,31 @@
-# Red Vivero Lima — MVP de red mayorista
+# Vivero Contreras — catálogo de plantas y viveros aliados
 
-Este proyecto es un catálogo estático y un canal de consultas para una red B2B de productores, viveros, revendedores y paisajistas. No es un marketplace: no procesa pagos, no garantiza stock y no coordina transporte.
+El sitio presenta primero el catálogo y la información de Vivero Contreras. La estructura también permite incorporar viveros aliados y sus productos. Todas las consultas del sitio llegan al WhatsApp definido en `whatsappOperador`; la disponibilidad, los precios y las entregas deben confirmarse antes de cerrar cada pedido.
 
-## Antes de hacer público el sitio (15 minutos)
+## Configuración inicial
 
 1. Abre `data.js`.
 2. Cambia `nombre` si quieres usar otro nombre.
-3. Cambia `whatsappOperador: "51999999999"` por **tu WhatsApp Business**: código `51` + tu número, sin `+`, espacios o guiones. Ejemplo: `51987654321`.
-4. Cambia `fechaActualizacion` por la hora real.
-5. Sustituye cada producto de ejemplo por stock confirmado de un productor. Borra lo que no tenga stock.
-6. Guarda los archivos y abre `index.html` con doble clic para probar.
+3. Configura `whatsappOperador` con tu WhatsApp Business: código `51` + tu número, sin `+`, espacios o guiones.
+4. `viveroPrincipalId` identifica el vivero que aparece primero. Actualiza su perfil y los productos en `viveros` y `productos`.
+5. Cambia `fechaActualizacion` y publica solo disponibilidad que hayas confirmado. Retira los productos que ya no estén disponibles.
+6. Abre `index.html` para probar el catálogo y verifica que las consultas de producto, vivero y solicitud abran tu WhatsApp.
 
-No publiques el sitio mientras el número de ejemplo siga puesto.
+El panel experimental de administración no se publica: es local al navegador, no sincroniza los cambios con GitHub y su clave no es una protección real. Para añadir un vivero aliado, agrega su ficha a `viveros` y vincula sus productos mediante `viveroId` en `data.js`.
 
-## Publicar gratis en menos de 15 minutos: GitHub Pages
+## Sitio publicado
 
-1. Crea una cuenta en [GitHub](https://github.com) si no tienes una.
-2. Pulsa **New repository** y nómbralo `red-vivero-lima`.
-3. Déjalo como **Public** y créalo.
-4. Sube `index.html`, `styles.css`, `app.js` y `data.js` usando **Add file → Upload files**. Sube también las carpetas si quieres conservar tus plantillas.
-5. Ve a **Settings → Pages**.
-6. En **Build and deployment**, elige **Deploy from a branch**, rama `main` y carpeta `/ (root)`; pulsa **Save**.
-7. Espera uno o dos minutos. GitHub mostrará una dirección parecida a `https://tuusuario.github.io/red-vivero-lima/`.
-8. Abre esa dirección desde el celular y prueba una consulta. Debe abrir tu WhatsApp Business con un mensaje completo.
+El proyecto se publica con GitHub Pages en `https://brunoplusx4.github.io/red-vivero-lima/`.
 
-Para actualizar stock más adelante, edita `data.js` desde GitHub, haz **Commit changes** y actualiza la fecha. El enlace no cambia.
+Para actualizar el catálogo, edita `data.js`, confirma precios y stock, actualiza `fechaActualizacion` y publica los cambios en la rama `main`. Las consultas de la web se dirigen al WhatsApp indicado en `whatsappOperador`.
+
+```powershell
+git add index.html styles.css app.js data.js README.md assets
+git commit -m "Publicar catálogo de Vivero Contreras"
+git push origin main
+```
+
+Después de subirlos, espera la publicación de GitHub Pages y prueba el enlace desde un celular.
 
 ## Configurar WhatsApp Business (30 minutos)
 
@@ -33,15 +34,15 @@ Usa un número exclusivo si es posible. No conectes automatizaciones ni envíes 
 1. Instala **WhatsApp Business** desde la tienda oficial.
 2. Registra el número que pondrás en `data.js`.
 3. Perfil de empresa:
-   - Nombre: `Red Vivero Lima | Mayorista`
+   - Nombre: `Vivero Contreras`
    - Categoría: `Servicio empresarial` o `Compras y ventas`
-   - Descripción: `Canal de consulta de disponibilidad mayorista de plantas. Stock, precio, separación y transporte se confirman directamente con cada productor.`
+   - Descripción: `Vivero de plantas ornamentales en Lurín. Consulta disponibilidad, tamaños, precios y opciones de recojo por WhatsApp.`
 4. Configura mensaje de bienvenida:
 
    ```text
-   Hola, gracias por escribir a Red Vivero Lima.
-   Para buscar una planta, indícanos: especie, cantidad, tamaño, fecha y distrito.
-   El stock, precio, separación y transporte se confirman directamente con el productor.
+   Hola, gracias por escribir a Vivero Contreras.
+   Para ayudarte, indícanos: planta, cantidad, tamaño y distrito.
+   Confirmaremos disponibilidad, precio y opciones de recojo o entrega.
    ```
 
 5. Configura respuestas rápidas:
@@ -54,24 +55,19 @@ Usa un número exclusivo si es posible. No conectes automatizaciones ni envíes 
    Te compartimos disponibilidad referencial. Antes de separar, confirma directamente con el productor.
 
    /reglas
-   Red Vivero Lima conecta consultas. No recibe pagos de plantas ni garantiza stock, calidad, transporte o entrega.
+   Confirma disponibilidad, precio y condiciones de recojo o entrega antes de separar o pagar tu pedido.
 
    /productor
-   Para participar necesitamos: nombre del vivero, zona, contacto, referencias, fotos reales, stock, mínimo de compra y frecuencia de actualización.
+   Para sumar un vivero necesitamos: nombre, zona, contacto autorizado, especialidad, fotos reales y productos disponibles.
    ```
 
-6. Crea etiquetas: `Comprador nuevo`, `Productor`, `Solicitud nueva`, `Buscando`, `Opciones enviadas`, `Separada`, `Cerrada`, `No disponible`.
+6. Crea etiquetas de seguimiento según tu operación, por ejemplo: `Cliente nuevo`, `Solicitud nueva`, `En seguimiento`, `Pedido coordinado`, `Cerrada`.
 
 7. Envía el enlace del sitio solo a personas que acepten recibirlo. No copies el mismo mensaje a grupos ni contactos no interesados.
 
-## Operación diaria: 20–30 minutos
+## Para añadir fotos
 
-1. Al comenzar el día, pregunta a cada productor inscrito qué stock quiere publicar.
-2. Cambia la fecha y los productos en `data.js`; elimina los que no estén confirmados.
-3. Revisa WhatsApp y registra cada consulta en `operacion/solicitudes.csv` o en una hoja de Google Sheets con las mismas columnas.
-4. Consulta disponibilidad al productor; nunca confirmes por él.
-5. Presenta opciones al comprador, con zona, cantidad y condición de recojo.
-6. Cuando productor y comprador cierren, actualiza el estado a `Cerrada`.
+El proyecto incluye imágenes en `assets/`. Usa solo fotos propias o autorizadas; guarda las nuevas imágenes allí y actualiza la propiedad `imagen` del vivero o producto correspondiente en `data.js`. Comprime las fotos para que el catálogo cargue rápido.
 
 ## Regla de seguridad y confianza
 
@@ -83,10 +79,4 @@ Usa un número exclusivo si es posible. No conectes automatizaciones ni envíes 
 
 ## Para añadir fotos reales después
 
-Esta versión usa iconos para poder lanzarse hoy. Crea `assets/productos/`, guarda fotos comprimidas con nombres simples, por ejemplo `bugambilia.jpg`, y agrega una propiedad `imagen:"assets/productos/bugambilia.jpg"` a cada producto en `data.js`. Ejemplo:
-
-```js
-{ id:"bugambilia", nombre:"Bugambilia", imagen:"assets/productos/bugambilia.jpg", ... }
-```
-
-Hazlo solo cuando tengas fotos autorizadas y stock real.
+Comprueba que la foto corresponde al producto anunciado y que tienes autorización para publicarla.

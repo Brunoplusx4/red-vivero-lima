@@ -3,123 +3,308 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Red privada de disponibilidad mayorista de plantas en Lima." />
-    <title>Red Vivero Lima | Stock mayorista</title>
+    <meta name="description" content="Conoce las plantas de Vivero Contreras en Lurín, consulta disponibilidad por WhatsApp y descubre viveros aliados de Lima." />
+    <meta name="theme-color" content="#183d31" />
+    <title>Vivero Contreras | Plantas de Lurín y viveros aliados</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Leaflet CSS para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="photos.css" />
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <a class="skip-link" href="#catalogo">Ir al catálogo</a>
+    <a class="skip-link" href="#catalogo">Ir a las plantas</a>
+
+    <!-- Encabezado Principal -->
     <header class="site-header">
-      <a class="brand" href="#inicio" aria-label="Red Vivero Lima, inicio">
-        <span class="brand-mark" aria-hidden="true">✦</span>
-        <span><strong id="brandName">Red Vivero Lima</strong><small>Stock mayorista</small></span>
+      <a class="brand" href="#inicio" aria-label="Vivero Contreras, inicio">
+        <span class="brand-mark" aria-hidden="true">🌱</span>
+        <span>
+          <strong id="brandName">Vivero Contreras</strong>
+          <small>Plantas propias · Red de viveros</small>
+        </span>
       </a>
       <nav aria-label="Navegación principal">
-        <a href="#catalogo">Disponibilidad</a>
-        <a href="#como-funciona">Cómo funciona</a>
-        <a class="nav-cta" href="#solicitud">Busco planta</a>
+        <a href="#catalogo">Plantas</a>
+        <a href="#publicidad-vip">Nuestro vivero</a>
+        <a href="#mapa-lima">Ubicación</a>
+        <a href="#viveros-red">Viveros aliados</a>
+        <a href="#como-funciona">Cómo comprar</a>
+        <a id="headerWhatsApp" class="nav-cta" href="#" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
       </nav>
     </header>
 
     <main id="inicio">
+      <!-- Hero Principal -->
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">RED PRIVADA · LIMA</p>
-          <h1>Encuentra stock mayorista sin llamar a diez viveros.</h1>
-          <p class="hero-text">Conectamos compradores, revendedores y paisajistas con productores de plantas, flores y viveros. Consulta disponibilidad, cantidad y punto de recojo.</p>
+          <p class="eyebrow"><span>✦</span> VIVERO CONTRERAS · LURÍN, LIMA</p>
+          <h1>Plantas que dan vida a tus espacios, directo desde nuestro vivero.</h1>
+          <p class="hero-text">
+            Conoce nuestras plantas ornamentales, consulta tamaños y disponibilidad, y recibe atención directa por WhatsApp. También estamos creando una red para sumar viveros aliados de Lima.
+          </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#solicitud">Busco una planta</a>
-            <a class="button button-secondary" href="#catalogo">Ver disponibilidad</a>
+            <a class="button button-primary" href="#catalogo">
+              <span>🌿</span> Ver nuestras plantas
+            </a>
+            <a id="heroWhatsApp" class="button button-secondary" href="#" target="_blank" rel="noopener">
+              <span>📲</span> Consultar ahora
+            </a>
           </div>
-          <p class="hero-note">Stock sujeto a confirmación directa del productor.</p>
+          <p class="hero-note">
+            Precios y stock sujetos a confirmación · Recojo en vivero o coordinación de entrega.
+          </p>
         </div>
-        <aside class="hero-card" aria-label="Resumen de operación">
-          <p class="card-label">ACTUALIZACIÓN</p>
-          <strong id="updatedAt">—</strong>
+        <aside class="hero-card" aria-label="Información del vivero principal">
+          <p class="card-label">ATENCIÓN DIRECTA</p>
+          <strong id="heroNurseryName">Vivero Contreras</strong>
           <hr />
-          <p><span class="dot"></span> Productores verificados por referencia</p>
-          <p><span class="dot"></span> Separación y pago directo al productor</p>
-          <p><span class="dot"></span> Recojo o transporte coordinado entre las partes</p>
+          <p><span class="dot"></span><span id="heroNurseryZone">Lurín, Lima</span></p>
+          <p><span class="dot"></span><span id="heroNurseryAddress">Consulta el punto de recojo</span></p>
+          <p><span class="dot"></span><span id="heroNurserySpecialty">Ornamentales, ficus y palmeras</span></p>
+          <p class="hero-updated">Catálogo actualizado: <span id="updatedAt">Consulta disponibilidad</span></p>
         </aside>
       </section>
 
-      <section class="trust-strip" aria-label="Para quién es">
-        <span>Viveros</span><span>Revendedores</span><span>Paisajistas</span><span>Jardineros</span><span>Compradores mayoristas</span>
+      <!-- Trust Strip -->
+      <section class="trust-strip" aria-label="Ventajas de comprar con nosotros">
+        <span>🌿 Plantas de nuestro vivero</span>
+        <span>📲 Atención por WhatsApp</span>
+        <span>📍 Recojo en Lurín</span>
+        <span>🤝 Viveros aliados en crecimiento</span>
       </section>
 
+      <!-- SECCIÓN DE PUBLICIDAD VIP (MONETIZACIÓN DE ESPACIOS) -->
+      <section id="publicidad-vip" class="vip-ad-section">
+        <div id="vipAdContainer">
+          <!-- Renderizado dinámicamente con app.js -->
+        </div>
+      </section>
+
+      <!-- SECCIÓN DE CATÁLOGO CON BUSCADOR Y FILTROS INTELIGENTES -->
       <section id="catalogo" class="section catalog-section">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">DISPONIBILIDAD</p>
-            <h2>Stock referencial</h2>
-            <p>Filtra por categoría o zona. Confirma siempre cantidad, precio y fecha antes de separar.</p>
+            <p class="eyebrow">PLANTAS Y DISPONIBILIDAD</p>
+            <h2>Encuentra tu próxima planta</h2>
+            <p>Explora nuestro catálogo, compara tamaños y consulta el stock más reciente con nuestro equipo.</p>
           </div>
-          <button id="shareCatalog" class="text-button" type="button">Compartir catálogo</button>
+          <button id="shareCatalog" class="button button-secondary" type="button" style="padding:0.6rem 1rem;font-size:0.88rem;">
+            <span>↗</span> Compartir catálogo
+          </button>
         </div>
-        <div id="filters" class="filters" aria-label="Filtrar catálogo"></div>
+
+        <!-- Buscador Inteligente -->
+        <div class="search-filter-wrapper">
+          <div class="search-input-box">
+            <span class="search-icon">🔍</span>
+            <input
+              type="search"
+              id="catalogSearch"
+              class="catalog-search-input"
+              placeholder="Buscar por planta (ej: Bugambilia, Ficus, Limón), vivero o zona..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="filters-row">
+            <!-- Filtro de Categorías -->
+            <div id="filters" class="filters" aria-label="Filtrar por categoría"></div>
+
+            <!-- Filtros adicionales por zona, vivero y orden -->
+            <div class="dropdown-filters">
+              <select id="filterNursery" class="custom-select" aria-label="Filtrar por vivero">
+                <option value="Todos">🌱 Todos los viveros</option>
+              </select>
+
+              <select id="filterZone" class="custom-select" aria-label="Filtrar por zona">
+                <option value="Todas">📍 Todas las zonas</option>
+              </select>
+
+              <select id="filterVip" class="custom-select" aria-label="Filtrar por tipo">
+                <option value="Todos">Tipo de vivero</option>
+                <option value="SoloVIP">⭐ Solo viveros destacados</option>
+              </select>
+
+              <select id="sortOrder" class="custom-select" aria-label="Ordenar">
+                <option value="destacados">⭐ Destacados primero</option>
+                <option value="az">Nombre (A - Z)</option>
+                <option value="precio-menor">Menor precio</option>
+                <option value="precio-mayor">Mayor precio</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner de Filtro Activo por Vivero -->
+        <div id="activeNurseryBanner" class="active-nursery-banner" style="display:none;"></div>
+
         <p id="stockCount" class="stock-count"></p>
         <div id="catalogGrid" class="catalog-grid" aria-live="polite"></div>
       </section>
 
+      <!-- MAPA INTERACTIVO DE VIVEROS DE LIMA -->
+      <section id="mapa-lima" class="section map-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">VISÍTANOS O UBICA A LOS ALIADOS</p>
+            <h2>Visítanos en Lurín</h2>
+            <p>Explora nuestra ubicación y abre la ruta en Google Maps. Confirma la dirección y el horario antes de visitarnos.</p>
+          </div>
+        </div>
+
+        <div class="map-controls-bar">
+          <span style="font-size:0.88rem;font-weight:700;color:var(--ink);">Enfocar Zona Rápida:</span>
+          <div class="quick-zone-btns">
+            <button class="btn-zone" onclick="focusMapZone('todo')">📍 Todo Lima</button>
+            <button class="btn-zone" onclick="focusMapZone('lurin')">🌺 Lurín</button>
+          </div>
+        </div>
+
+        <div id="viverosMap"></div>
+      </section>
+
+      <!-- DIRECTORIO DE VIVEROS Y CAPTACIÓN DE PUBLICIDAD -->
+      <section id="viveros-red" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">RED EN CRECIMIENTO</p>
+            <h2>Nuestro vivero y viveros aliados</h2>
+            <p>Vivero Contreras es el punto de partida. ¿Tienes un vivero? Escríbenos para conocer cómo sumar tu catálogo a la red.</p>
+          </div>
+        </div>
+
+        <div id="nurseriesGrid" class="nurseries-grid">
+          <!-- Renderizado con app.js -->
+        </div>
+      </section>
+
+      <!-- CÓMO FUNCIONA -->
       <section id="como-funciona" class="section process-section">
         <div class="section-heading narrow">
-          <p class="eyebrow">SIN INTERMEDIAR EL DINERO</p>
-          <h2>La red ordena la búsqueda; el negocio se confirma entre comprador y productor.</h2>
+          <p class="eyebrow">ATENCIÓN PERSONALIZADA</p>
+          <h2>Te ayudamos a encontrar la planta adecuada y confirmar cada detalle.</h2>
         </div>
         <ol class="process-grid">
-          <li><span>01</span><h3>Indica lo que buscas</h3><p>Especie, cantidad, tamaño, fecha y distrito.</p></li>
-          <li><span>02</span><h3>Recibe opciones</h3><p>Contrastamos disponibilidad con productores de la red.</p></li>
-          <li><span>03</span><h3>Confirma directamente</h3><p>El productor valida precio, stock, separación y recojo.</p></li>
-          <li><span>04</span><h3>Coordina el traslado</h3><p>Las partes usan su transporte habitual o acuerdan uno.</p></li>
+          <li>
+            <span>01</span>
+            <h3>Explora las plantas</h3>
+            <p>Busca por nombre, categoría, tamaño o zona.</p>
+          </li>
+          <li>
+            <span>02</span>
+            <h3>Escríbenos</h3>
+            <p>Todos los botones de contacto llegan al WhatsApp del vivero principal.</p>
+          </li>
+          <li>
+            <span>03</span>
+            <h3>Confirmamos los detalles</h3>
+            <p>Consulta precio, cantidad, fotos recientes y disponibilidad antes de separar.</p>
+          </li>
+          <li>
+            <span>04</span>
+            <h3>Coordina la entrega</h3>
+            <p>Confirma el punto de recojo y consulta las opciones de transporte disponibles.</p>
+          </li>
         </ol>
       </section>
 
+      <!-- FORMULARIO "BUSCO PLANTA" -->
       <section id="solicitud" class="section request-section">
         <div class="request-intro">
-          <p class="eyebrow">BUSCO PLANTA</p>
-          <h2>¿Tu proveedor habitual no tiene stock?</h2>
-          <p>Déjanos el detalle. El formulario abre una consulta por WhatsApp; no cobraremos ni pediremos datos bancarios.</p>
-          <div class="request-warning"><strong>Importante:</strong> la solicitud no es una reserva. Una reserva existe solo cuando el productor la confirma.</div>
+          <p class="eyebrow">TE AYUDAMOS A ENCONTRARLA</p>
+          <h2>¿Buscas una planta que no aparece aquí?</h2>
+          <p>
+            Cuéntanos qué planta necesitas, cuántas unidades y para cuándo. Te responderemos por WhatsApp con la información disponible.
+          </p>
+          <div class="request-warning">
+            <strong>Importante:</strong> La disponibilidad, el precio, el recojo y cualquier entrega se confirman antes de realizar el pedido.
+          </div>
         </div>
         <form id="requestForm" class="request-form">
-          <label>Tu nombre o empresa<input required name="nombre" maxlength="70" autocomplete="name" placeholder="Ej.: Vivero San José" /></label>
-          <label>WhatsApp<input required name="whatsapp" inputmode="tel" maxlength="25" placeholder="Ej.: 999 999 999" /></label>
-          <label>¿Qué planta buscas?<input required name="planta" maxlength="100" placeholder="Ej.: Bugambilia" /></label>
-          <label>Cantidad<input required name="cantidad" maxlength="50" placeholder="Ej.: 80 unidades" /></label>
-          <label>Tamaño / presentación<input name="tamano" maxlength="80" placeholder="Ej.: mediana, bolsa 10 L" /></label>
-          <label>¿Para cuándo la necesitas?<input name="fecha" maxlength="80" placeholder="Ej.: esta semana" /></label>
-          <label>Distrito para recojo o entrega<input name="zona" maxlength="80" placeholder="Ej.: Lurín / Rímac" /></label>
-          <label>¿Aceptas alternativas?<select name="alternativas"><option>Sí, puedo evaluar alternativas</option><option>No, solo la especie solicitada</option></select></label>
-          <label class="form-full">Notas adicionales<textarea name="notas" maxlength="300" rows="3" placeholder="Ej.: compra al por mayor, necesito factura, color específico..."></textarea></label>
-          <label class="checkbox form-full"><input required type="checkbox" name="consentimiento" /> Entiendo que el stock, precio, pago y transporte se confirman directamente con el productor.</label>
-          <button class="button button-primary form-full" type="submit">Enviar consulta por WhatsApp</button>
+          <label>
+            Tu nombre o empresa *
+            <input required name="nombre" maxlength="70" autocomplete="name" placeholder="Ej.: Vivero San José / Paisajismo Lima" />
+          </label>
+          <label>
+            WhatsApp de contacto *
+            <input required name="whatsapp" inputmode="tel" maxlength="25" placeholder="Ej.: 999 999 999" />
+          </label>
+          <label>
+            ¿Qué planta o insumo buscas? *
+            <input required name="planta" maxlength="100" placeholder="Ej.: 50 Palmeras Areca de 1.5m" />
+          </label>
+          <label>
+            Cantidad requerida *
+            <input required name="cantidad" maxlength="50" placeholder="Ej.: 60 unidades, 1 lote..." />
+          </label>
+          <label>
+            Tamaño / Presentación deseada
+            <input name="tamano" maxlength="80" placeholder="Ej.: Mediana, Bolsa 10L, Maceta N°14" />
+          </label>
+          <label>
+            ¿Para cuándo la necesitas?
+            <input name="fecha" maxlength="80" placeholder="Ej.: Esta semana, fin de mes..." />
+          </label>
+          <label>
+            Distrito o zona de destino
+            <input name="zona" maxlength="80" placeholder="Ej.: Lurín, Miraflores, La Molina..." />
+          </label>
+          <label>
+            ¿Aceptas alternativas similares?
+            <select name="alternativas">
+              <option>Sí, puedo evaluar especies similares</option>
+              <option>No, busco únicamente esta variedad</option>
+            </select>
+          </label>
+          <label class="form-full">
+            Notas o especificaciones
+            <textarea name="notas" maxlength="300" rows="3" placeholder="Ej.: necesito factura, flor de color específico, planta con botón floral..."></textarea>
+          </label>
+          <label class="checkbox form-full">
+            <input required type="checkbox" name="consentimiento" />
+            Entiendo que enviar esta solicitud no confirma stock, precio ni transporte; los detalles se coordinarán por WhatsApp.
+          </label>
+          <button class="button button-primary form-full" type="submit">
+            <span>📲</span> Enviar requerimiento por WhatsApp
+          </button>
         </form>
-      </section>
-
-      <section class="section supplier-section">
-        <div>
-          <p class="eyebrow">SOY PRODUCTOR</p>
-          <h2>¿Quieres que compradores mayoristas conozcan tu stock?</h2>
-          <p>Participa con información actualizada, fotos reales y condiciones claras. La red solo publica proveedores validados por referencia.</p>
-        </div>
-        <button id="supplierButton" class="button button-dark" type="button">Quiero participar como productor</button>
       </section>
     </main>
 
+    <!-- Footer -->
     <footer>
-      <span id="footerName">Red Vivero Lima</span>
+      <span id="footerName">Vivero Contreras</span>
       <span>·</span>
-      <span>Canal de consulta mayorista</span>
+      <span>Plantas propias y viveros aliados en Lima</span>
       <span>·</span>
-      <button id="footerWhatsApp" class="footer-link" type="button">WhatsApp</button>
+      <a id="footerWhatsApp" href="#" target="_blank" rel="noopener">WhatsApp del vivero</a>
     </footer>
 
+    <!-- Modal de Detalle de Producto -->
     <dialog id="productDialog" class="product-dialog">
       <button class="dialog-close" aria-label="Cerrar">×</button>
       <div id="dialogContent"></div>
     </dialog>
 
+    <!-- Modal de Video Promocional -->
+    <dialog id="videoDialog" class="product-dialog" style="max-width:800px;background:#000;">
+      <button class="dialog-close" aria-label="Cerrar" style="background:#fff;">×</button>
+      <div id="videoContainer" style="padding:1rem;display:flex;justify-content:center;align-items:center;">
+        <!-- Se inserta el iframe o video tag -->
+      </div>
+    </dialog>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="data.js"></script>
     <script src="app.js"></script>
   </body>

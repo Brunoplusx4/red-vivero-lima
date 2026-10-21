@@ -1,20 +1,161 @@
 /*
-  EDITA SOLO ESTE ARCHIVO PARA CAMBIAR NOMBRE, WHATSAPP Y STOCK.
-  WhatsApp usa código de país sin +, espacios ni guiones. Ejemplo Perú: 51999999999
+  RED VIVERO LIMA - CONFIGURACIÓN CENTRAL DE DATOS
+  Puedes editar este archivo directamente o gestionarlo visualmente desde admin.html
 */
 window.RED_VIVERO_CONFIG = {
-  nombre: "Red Vivero Lima",
-  whatsappOperador: "51903227351", // REEMPLAZAR antes de publicar
-  fechaActualizacion: "19 de octubre de 2026 · 2:00 p. m.",
-  zonas: ["Lurín", "Villa El Salvador", "Acho / Rímac"],
+  nombre: "Vivero Contreras",
+  whatsappOperador: "51903227351",
+  viveroPrincipalId: "vivero-contreras",
+  googleMapsApiKey: "", // PEGA AQUÍ TU API KEY DE GOOGLE MAPS (Ejemplo: "AIzaSy...")
+  fechaActualizacion: "21 de octubre de 2026 · Disponibilidad por WhatsApp",
+  zonas: ["Lurín"],
+
+  // Perfil principal del vivero propio; los demás perfiles son viveros aliados.
+  publicidad: {
+    activo: true,
+    viveroDestacado: {
+      id: "vivero-contreras",
+      nombre: "Vivero Contreras",
+      badge: "VIVERO PROPIO · LURÍN, LIMA",
+      slogan: "Producción mayorista de bugambilias, ficus, palmeras y plantas ornamentales para obras y paisajismo.",
+      descripcion: "Consulta disponibilidad, tamaños, precios por cantidad y opciones de recojo. Cada pedido se confirma directamente por WhatsApp antes de coordinar.",
+      imagen: "assets/vivero_destacado.jpg",
+      videoUrl: "", // Puedes pegar un enlace de YouTube o video local
+      zona: "Lurín",
+      direccion: "Antigua Panamericana Sur Km 35, Lurín (Valle de Lurín)",
+      whatsapp: "51903227351",
+      lat: -12.2749,
+      lng: -76.8719,
+      botonTexto: "Cotizar por WhatsApp"
+    },
+    banners: [
+      {
+        id: "banner-bugambilia",
+        titulo: "Lote Especial: Bugambilias de 1 metro",
+        subtitulo: "Precio mayorista desde 12 unidades · Colores fucsia, naranja y blanco",
+        imagen: "assets/bugambilia.jpg",
+        vivero: "Vivero Contreras",
+        whatsapp: "51903227351",
+        badge: "OFERTA POR TEMPORADA"
+      }
+    ],
+    tarifarioSugerido: {
+      portadaSemanal: "S/ 80",
+      portadaMensual: "S/ 250",
+      pinVipMapa: "S/ 50 / mes",
+      packCompleto: "S/ 320 / mes (Portada + Mapa + Top Catálogo)"
+    }
+  },
+
+  // Vivero propio y viveros aliados que se incorporen en el futuro.
+  viveros: [
+    {
+      id: "vivero-contreras",
+      nombre: "Vivero Contreras",
+      productor: "Familia Contreras / Gilberto Contreras Velasquez",
+      zona: "Lurín",
+      direccion: "Antigua Panamericana Sur Km 35, Lurín",
+      lat: -12.2749,
+      lng: -76.8719,
+      whatsapp: "51903227351",
+      esVip: true,
+      badge: "Vivero Verificado VIP ⭐",
+      especialidad: "Bugambilias, ficus, palmeras y ornamentales",
+      logo: "🌺",
+      imagen: "assets/vivero_destacado.jpg",
+      descripcion: "Centro productor líder con cultivo a gran escala de bugambilias en varios colores, ficus y palmeras con despacho a todo Lima y retiro en camión."
+    }
+  ],
+
+  // CATÁLOGO DE PRODUCTOS MAYORISTAS
   productos: [
-    {id:"bugambilia",nombre:"Bugambilia",categoria:"Ornamentales",zona:"Lurín",tamano:"Mediana · 80–100 cm",precio:"Desde S/18",minimo:"Mín. 12 unidades",cantidad:"Consultar",icono:"🌺",tono1:"#d65b73",tono2:"#f2b8af",descripcion:"Planta ornamental para exterior. Confirmar color y cantidad disponible."},
-    {id:"ficus",nombre:"Ficus benjamina",categoria:"Ornamentales",zona:"Villa El Salvador",tamano:"1.2–1.5 m",precio:"Desde S/42",minimo:"Mín. 6 unidades",cantidad:"Disponible",icono:"🌿",tono1:"#4b8a55",tono2:"#bfd6a9",descripcion:"Ideal para jardines y proyectos de paisajismo."},
-    {id:"limon",nombre:"Limón sutil",categoria:"Frutales",zona:"Lurín",tamano:"Bolsa 10 L",precio:"Cotizar",minimo:"Mín. 10 unidades",cantidad:"Consultar",icono:"🍋",tono1:"#b4bf45",tono2:"#ece795",descripcion:"Frutal de vivero. Consultar edad, altura y disponibilidad."},
-    {id:"suculentas",nombre:"Mix de suculentas",categoria:"Suculentas",zona:"Villa El Salvador",tamano:"Maceta pequeña",precio:"Desde S/3.50",minimo:"Mín. 24 unidades",cantidad:"Disponible",icono:"🪴",tono1:"#6d9d86",tono2:"#c8e2ca",descripcion:"Mix sujeto a variedades disponibles en la semana."},
-    {id:"palmera",nombre:"Palmera areca",categoria:"Ornamentales",zona:"Lurín",tamano:"1.0–1.3 m",precio:"Cotizar",minimo:"Mín. 5 unidades",cantidad:"Consultar",icono:"🌴",tono1:"#2b7860",tono2:"#b6dd9c",descripcion:"Consultar cantidad, altura exacta y condiciones de recojo."},
-    {id:"geranios",nombre:"Geranios",categoria:"Flores",zona:"Acho / Rímac",tamano:"Maceta mediana",precio:"Desde S/7",minimo:"Mín. 12 unidades",cantidad:"Disponible",icono:"🌸",tono1:"#da6e7f",tono2:"#f5c2c4",descripcion:"Consultar colores y campaña disponible."},
-    {id:"macetas",nombre:"Macetas de cemento",categoria:"Macetas e insumos",zona:"Villa El Salvador",tamano:"Varios tamaños",precio:"Cotizar",minimo:"Mín. 6 unidades",cantidad:"Consultar",icono:"🏺",tono1:"#9b8069",tono2:"#ddcab2",descripcion:"Consultar modelos, medidas, peso y cantidad."},
-    {id:"tierra",nombre:"Tierra preparada",categoria:"Macetas e insumos",zona:"Lurín",tamano:"Bolsa 40 L",precio:"Desde S/16",minimo:"Mín. 5 bolsas",cantidad:"Disponible",icono:"🟫",tono1:"#8e694c",tono2:"#cfad83",descripcion:"Mezcla para jardinería. Confirmar costo de transporte."}
+    {
+      id: "bugambilia",
+      nombre: "Bugambilia imperial",
+      categoria: "Ornamentales",
+      viveroId: "vivero-contreras",
+      zona: "Lurín",
+      direccionRecojo: "Antigua Panamericana Sur Km 35, Lurín",
+      tamano: "Mediana · 80–100 cm",
+      precio: "Desde S/18",
+      precioNum: 18,
+      minimo: "Mín. 12 unidades",
+      cantidad: "85 plantas disponibles en campo",
+      fechaFoto: "19 de octubre de 2026",
+      estadoPlanta: "Floración activa vigorosa · Óptima sanidad vegetal en bolsa de vivero",
+      icono: "🌺",
+      imagen: "assets/bugambilia.jpg",
+      videoUrl: "",
+      esDestacado: true,
+      tono1: "#d65b73",
+      tono2: "#f2b8af",
+      descripcion: "Planta ornamental para exterior de floración abundante. Varios colores disponibles (fucsia, naranja, blanco) para entrega en Lurín o despacho coordinado."
+    },
+    {
+      id: "ficus",
+      nombre: "Ficus benjamina",
+      categoria: "Ornamentales",
+      viveroId: "vivero-contreras",
+      zona: "Lurín",
+      direccionRecojo: "Antigua Panamericana Sur Km 35, Lurín",
+      tamano: "1.2–1.5 m",
+      precio: "Desde S/42",
+      precioNum: 42,
+      minimo: "Mín. 6 unidades",
+      cantidad: "50 unidades listas para cerco",
+      fechaFoto: "18 de octubre de 2026",
+      estadoPlanta: "Follaje denso y verde oscuro · Excelente enraizamiento para transplante directo",
+      icono: "🌿",
+      imagen: "",
+      videoUrl: "",
+      esDestacado: true,
+      tono1: "#4b8a55",
+      tono2: "#bfd6a9",
+      descripcion: "Ideal para cerco vivo, parques, jardines interiores y proyectos de paisajismo arquitectónico."
+    },
+    {
+      id: "palmera",
+      nombre: "Palmera areca",
+      categoria: "Ornamentales",
+      viveroId: "vivero-contreras",
+      zona: "Lurín",
+      direccionRecojo: "Antigua Panamericana Sur Km 35, Lurín",
+      tamano: "1.0–1.3 m",
+      precio: "Cotizar por lote",
+      precioNum: 0,
+      minimo: "Mín. 5 unidades",
+      cantidad: "35 matas de varios tallos",
+      fechaFoto: "19 de octubre de 2026",
+      estadoPlanta: "Hojas abiertas sin puntas secas · Excelente porte para condominios e interiores",
+      icono: "🌴",
+      imagen: "",
+      videoUrl: "",
+      esDestacado: false,
+      tono1: "#2b7860",
+      tono2: "#b6dd9c",
+      descripcion: "Consultar cantidad, altura exacta y condiciones de recojo por camión en Lurín."
+    },
+    {
+      id: "tierra",
+      nombre: "Tierra preparada especial",
+      categoria: "Macetas e insumos",
+      viveroId: "vivero-contreras",
+      zona: "Lurín",
+      direccionRecojo: "Antigua Panamericana Sur Km 35, Lurín",
+      tamano: "Bolsa 40 L",
+      precio: "Desde S/16",
+      precioNum: 16,
+      minimo: "Mín. 5 bolsas",
+      cantidad: "100 bolsas listas para despacho",
+      fechaFoto: "18 de octubre de 2026",
+      estadoPlanta: "Mezcla cernida con humus, compost y cascarilla de arroz descompuesta",
+      icono: "🟫",
+      imagen: "",
+      videoUrl: "",
+      esDestacado: false,
+      tono1: "#8e694c",
+      tono2: "#cfad83",
+      descripcion: "Sustrato premium para máxima retención de humedad y buen drenaje en todo tipo de plantas."
+    }
   ]
 };
