@@ -5,12 +5,21 @@
 
   const configured = () => Boolean(config.supabaseUrl && config.supabaseAnonKey);
 
+  function projectUrl() {
+    const url = new URL(config.supabaseUrl);
+    url.pathname = url.pathname.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+    if (url.pathname && url.pathname !== "/") {
+      throw new Error("Usa la Project URL de Supabase, no una URL de una ruta específica de API.");
+    }
+    return url.origin;
+  }
+
   async function request(path, options = {}, accessToken) {
     if (!configured()) {
       throw new Error("Falta configurar la URL y la clave pública de Supabase en backend-config.js.");
     }
 
-    const response = await fetch(`${config.supabaseUrl.replace(/\/$/, "")}${path}`, {
+    const response = await fetch(`${projectUrl()}${path}`, {
       ...options,
       headers: {
         apikey: config.supabaseAnonKey,
@@ -134,7 +143,7 @@
       body: file
     }, session.access_token);
 
-    return `${config.supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/catalog-media/${objectPath}`;
+    return `${projectUrl()}/storage/v1/object/public/catalog-media/${objectPath}`;
   }
 
   window.ViveroCloud = {
