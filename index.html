@@ -18,10 +18,22 @@
       body {
         font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
       }
+      #catalogDataNotice {
+        margin: 0;
+        padding: 0.7rem 1rem;
+        background: #fff4d6;
+        color: #704b00;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+      #catalogDataNotice[hidden] {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <a class="skip-link" href="#catalogo">Ir a las plantas</a>
+    <p id="catalogDataNotice" role="status" aria-live="polite" hidden></p>
 
     <!-- Encabezado Principal -->
     <header class="site-header">
@@ -306,6 +318,8 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="data.js"></script>
+    <script src="backend-config.js"></script>
+    <script src="cloud.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

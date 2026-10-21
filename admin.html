@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrador del catálogo · Vivero Contreras</title>
+    <meta name="theme-color" content="#17382e" />
+    <link rel="manifest" href="admin.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="photos.css" />
+    <!-- Leaflet CSS para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      :root {
+        --admin-bg: #f4f6f0;
+        --admin-card: #ffffff;
+        --admin-sidebar: #0f2d24;
+        --admin-accent: #15803d;
+        --admin-gold: #d97706;
+      }
+      body.admin-body {
+        background: var(--admin-bg);
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #1a2e26;
+        display: flex;
+        min-height: 100vh;
+      }
+      /* Sidebar */
+      .admin-sidebar {
+        width: 270px;
+        background: var(--admin-sidebar);
+        color: #e5f2eb;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+      }
+      .admin-brand {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .admin-brand-icon {
+        background: #15803d;
+        color: white;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+      }
+      .admin-brand h2 {
+        font-size: 1.05rem;
+        margin: 0;
+        line-height: 1.2;
+      }
+      .admin-brand span {
+        font-size: 0.75rem;
+        color: #9ac2af;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .admin-nav {
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex: 1;
+      }
+      .admin-tab-btn {
+        background: transparent;
+        border: none;
+        color: #cbdad2;
+        padding: 0.85rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font: inherit;
+        font-size: 0.92rem;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+      }
+      .admin-tab-btn:hover {
+        background: rgba(255,255,255,0.06);
+        color: white;
+      }
+      .admin-tab-btn.active {
+        background: rgba(255,255,255,0.12);
+        color: #fff;
+        border-left-color: #22c55e;
+      }
+      .admin-sidebar-footer {
+        padding: 1.2rem 1.5rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .admin-view-catalog {
+        background: #22c55e;
+        color: #0c331a;
+        text-decoration: none;
+        padding: 0.65rem 1rem;
+        border-radius: 0.6rem;
+        font-weight: 700;
+        font-size: 0.88rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: transform 0.15s;
+      }
+      .admin-view-catalog:hover {
+        transform: translateY(-2px);
+      }
+      /* Main Content */
+      .admin-main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem 3rem;
+      }
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .admin-header-title h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        letter-spacing: -0.03em;
+      }
+      .admin-header-title p {
+        margin: 0.3rem 0 0;
+        color: #5f7069;
+        font-size: 0.95rem;
+      }
+      .admin-actions {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+      }
+      .btn {
+        border: none;
+        border-radius: 0.6rem;
+        padding: 0.7rem 1.2rem;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+        transition: all 0.15s;
+        text-decoration: none;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .btn-primary {
+        background: #15803d;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #166534;
+      }
+      .btn-gold {
+        background: #d97706;
+        color: white;
+      }
+      .btn-gold:hover {
+        background: #b45309;
+      }
+      .btn-secondary {
+        background: #e2e8e0;
+        color: #1a2e26;
+      }
+      .btn-secondary:hover {
+        background: #d5ded2;
+      }
+      /* Cards and Layout */
+      .admin-card {
+        background: var(--admin-card);
+        border: 1px solid #d9ded6;
+        border-radius: 1rem;
+        padding: 1.8rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      }
+      .admin-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #edf2eb;
+      }
+      .admin-card-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      .admin-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .form-group.full {
+        grid-column: 1 / -1;
+      }
+      .form-group label {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #273832;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid #c8d3c5;
+        border-radius: 0.6rem;
+        font: inherit;
+        background: #fdfdfc;
+      }
+      .form-group small {
+        font-size: 0.78rem;
+        color: #63776e;
+      }
+      .form-check {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+      }
+      .form-check input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+      /* Live Preview Boxes */
+      .live-preview-box {
+        background: #17382e;
+        color: #e5f7ed;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        margin-top: 1rem;
+      }
+      .live-preview-box h3 {
+        margin: 0.4rem 0;
+        font-size: 1.4rem;
+      }
+      .vip-tag {
+        display: inline-block;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #fff;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      /* Map Picker Container */
+      #adminMapPicker {
+        height: 320px;
+        border-radius: 0.8rem;
+        margin-top: 0.5rem;
+        border: 2px solid #d2ded0;
+        z-index: 1;
+      }
+      /* Table / Items Grid */
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      .items-table th {
+        text-align: left;
+        padding: 0.8rem 1rem;
+        background: #f3f7f1;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        color: #51635b;
+        border-bottom: 2px solid #e1e8df;
+      }
+      .items-table td {
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid #edf2eb;
+        vertical-align: middle;
+        font-size: 0.92rem;
+      }
+      .items-table tr:hover {
+        background: #fcfdfa;
+      }
+      .item-badge {
+        display: inline-block;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: #e9f0e6;
+        color: #27523f;
+      }
+      .item-badge.vip {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+      }
+      .thumb-preview {
+        width: 52px;
+        height: 52px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #eef2ec;
+        display: block;
+      }
+      .action-btns {
+        display: flex;
+        gap: 0.4rem;
+      }
+      .btn-mini {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.78rem;
+        border-radius: 6px;
+      }
+      .btn-danger {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .btn-danger:hover {
+        background: #fca5a5;
+      }
+      /* Toast notifications */
+      #toastMessage {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #154a3a;
+        color: white;
+        padding: 1rem 1.6rem;
+        border-radius: 0.8rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: none;
+        align-items: center;
+        gap: 0.8rem;
+        font-weight: 600;
+        z-index: 9999;
+        animation: slideUp 0.3s ease;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      /* Hide inactive tabs */
+      .admin-tab-pane {
+        display: none;
+      }
+      .admin-tab-pane.active {
+        display: block;
+      }
+      .admin-login-screen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #091e17, #12382c);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 1.5rem;
+      }
+      .admin-login-card {
+        background: #17382e;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      }
+      .login-avatar {
+        width: 58px;
+        height: 58px;
+        background: #15803d;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-size: 1.8rem;
+        margin: 0 auto 1.2rem;
+        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.35);
+      }
+      .admin-login-card h2 {
+        margin: 0;
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
+      }
+      .admin-login-card p {
+        margin: 0.5rem 0 0;
+        font-size: 0.9rem;
+        color: #9ebdb0;
+      }
+      .admin-login-card form {
+        display: grid;
+        gap: 0.8rem;
+        margin-top: 1.3rem;
+        text-align: left;
+      }
+      .admin-login-card label {
+        color: #d9e8df;
+        font-size: 0.85rem;
+        font-weight: 650;
+      }
+      .admin-login-card input {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 46px;
+        margin-top: 0.35rem;
+        padding: 0.7rem 0.8rem;
+        border: 1px solid #759487;
+        border-radius: 0.6rem;
+        background: #fff;
+        color: #17382e;
+        font: inherit;
+      }
+      .admin-login-card button {
+        min-height: 46px;
+        border: 0;
+        border-radius: 0.6rem;
+        background: #55c878;
+        color: #092518;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      #cloudLoginError {
+        min-height: 1.2em;
+        color: #fecaca;
+        text-align: left;
+      }
+      .cloud-status {
+        color: #b9d0c2;
+        font-size: 0.8rem;
+        overflow-wrap: anywhere;
+      }
+      .admin-login-screen[hidden],
+      .admin-sidebar[hidden],
+      .admin-main[hidden] {
+        display: none;
+      }
+      @media(max-width: 900px) {
+        body.admin-body {
+          flex-direction: column;
+        }
+        .admin-sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+        .admin-main {
+          padding: 1.5rem;
+        }
+        .admin-sidebar {
+          height: auto;
+        }
+        .admin-nav {
+          flex-direction: row;
+          overflow-x: auto;
+          padding: 0.5rem;
+        }
+        .admin-tab-btn {
+          flex: 0 0 auto;
+          border-left: 0;
+          border-bottom: 3px solid transparent;
+          padding: 0.75rem;
+        }
+        .admin-tab-btn.active {
+          border-bottom-color: #22c55e;
+        }
+        .admin-sidebar-footer {
+          padding: 0.7rem 1rem;
+        }
+        .admin-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .admin-actions {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+        .admin-actions .btn {
+          flex: 1 1 180px;
+        }
+      }
+      @media(max-width: 560px) {
+        .admin-main {
+          padding: 1rem 0.75rem;
+        }
+        .admin-card {
+          padding: 1rem;
+        }
+        .admin-card-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+        .admin-form-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .admin-form-grid .full {
+          grid-column: auto;
+        }
+        .admin-login-card {
+          padding: 2rem 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="admin-body">
+    <section id="cloudLoginScreen" class="admin-login-screen" aria-labelledby="cloudLoginTitle">
+      <div class="admin-login-card">
+        <div class="login-avatar" aria-hidden="true">🌱</div>
+        <h2 id="cloudLoginTitle">Administrador del catálogo</h2>
+        <p>Inicia sesión para editar plantas y viveros desde cualquier dispositivo.</p>
+        <form id="cloudLoginForm">
+          <label for="cloudLoginEmail">Correo electrónico
+            <input id="cloudLoginEmail" type="email" autocomplete="username" required />
+          </label>
+          <label for="cloudLoginPassword">Contraseña
+            <input id="cloudLoginPassword" type="password" autocomplete="current-password" required />
+          </label>
+          <button id="cloudLoginSubmit" type="submit">Iniciar sesión</button>
+          <p id="cloudLoginError" role="alert"></p>
+          <p id="cloudSetupMessage">El acceso requiere una cuenta de administrador configurada en Supabase.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar" hidden>
+      <div class="admin-brand">
+        <div class="admin-brand-icon">🌱</div>
+        <div>
+          <h2>Vivero Contreras</h2>
+          <span>Administrador en línea</span>
+        </div>
+      </div>
+      <nav class="admin-nav">
+        <button class="admin-tab-btn active" data-tab="tab-publicidad">
+          <span>⭐</span> Publicidad & Monetización
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-viveros">
+          <span>🗺️</span> Viveros & Mapa de Lima
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-productos">
+          <span>🌿</span> Catálogo de Plantas
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-config">
+          <span>⚙️</span> Ajustes & Exportar data.js
+        </button>
+      </nav>
+      <div class="admin-sidebar-footer">
+        <span id="adminUserStatus" class="cloud-status"></span>
+        <button id="btnLogout" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="admin-main" id="adminMain" hidden>
+      <header class="admin-header">
+        <div class="admin-header-title">
+          <h1 id="pageTitle">Administrador del catálogo</h1>
+          <p>Los cambios guardados se sincronizan en la nube y aparecen en el catálogo público.</p>
+        </div>
+        <div class="admin-actions">
+          <button id="btnSaveLocal" class="btn btn-primary" type="button">
+            <span>☁️</span> Guardar cambios
+          </button>
+          <button id="btnExportDataJs" class="btn btn-gold" type="button">
+            <span>📥</span> Descargar copia
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: PUBLICIDAD Y MONETIZACIÓN -->
+      <section id="tab-publicidad" class="admin-tab-pane active">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>Vivero principal o promoción destacada</h2>
+              <p style="color:#5f7069;margin:0.2rem 0 0;font-size:0.88rem;">Prueba la promoción con viveros aliados y valida resultados antes de definir tarifas.</p>
+            </div>
+            <label class="form-check">
+              <input type="checkbox" id="adActive" checked />
+              <strong>Mostrar Vivero Destacado</strong>
+            </label>
+          </div>
+
+          <form id="formFeaturedAd" class="admin-form-grid">
+            <div class="form-group">
+              <label for="adViveroSelect">Vivero Patrocinado</label>
+              <select id="adViveroSelect">
+                <!-- Se llena dinámicamente con los viveros registrados -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="adBadge">Etiqueta de Patrocinio</label>
+              <input type="text" id="adBadge" value="⭐ VIVERO DESTACADO DEL MES · ESPACIO PATROCINADO" />
+            </div>
+            <div class="form-group full">
+              <label for="adSlogan">Eslogan o Título Promocional</label>
+              <input type="text" id="adSlogan" value="Producción mayorista de bugambilias, ficus y plantas ornamentales para obras y paisajismo." />
+            </div>
+            <div class="form-group full">
+              <label for="adDesc">Descripción comercial de alto valor</label>
+              <textarea id="adDesc" rows="3">Más de 15 años abasteciendo a revendedores, viveros distritales y empresas de áreas verdes en todo Lima Sur. Stock garantizado por lotes y precios especiales por volumen.</textarea>
+            </div>
+            <div class="form-group">
+              <label for="adImageFile">Subir Imagen de Portada (Foto real del Vivero)</label>
+              <input type="file" id="adImageFile" accept="image/*" />
+              <input type="text" id="adImageUrl" placeholder="O pega ruta/URL: assets/vivero_destacado.jpg" value="assets/vivero_destacado.jpg" />
+            </div>
+            <div class="form-group">
+              <label for="adVideoUrl">Video Promocional / Spot (YouTube o enlace MP4)</label>
+              <input type="text" id="adVideoUrl" placeholder="Ej.: https://www.youtube.com/watch?v=... o enlace de video" />
+              <small>Si pegas un video, el catálogo mostrará un botón interactivo para reproducirlo.</small>
+            </div>
+            <div class="form-group">
+              <label for="adWhatsApp">WhatsApp del vivero</label>
+              <input type="text" id="adWhatsApp" value="51903227351" />
+            </div>
+            <div class="form-group">
+              <label for="adBtnText">Texto del Botón de Contacto</label>
+              <input type="text" id="adBtnText" value="Consultar con el Vivero Destacado" />
+            </div>
+          </form>
+
+          <!-- Previsualización en tiempo real -->
+          <div style="margin-top:1.5rem;">
+            <label style="font-weight:700;font-size:0.85rem;color:#495f54;">PREVISUALIZACIÓN DEL ANUNCIO EN PORTADA:</label>
+            <div class="live-preview-box">
+              <span id="prevBadge" class="vip-tag">⭐ VIVERO DESTACADO DEL MES</span>
+              <h3 id="prevTitle">Vivero El Oasis de Lurín</h3>
+              <p id="prevSlogan" style="color:#d1e7db;font-size:0.95rem;margin:0.3rem 0 1rem;"></p>
+              <div style="display:flex;gap:0.8rem;align-items:center;">
+                <span style="background:rgba(255,255,255,0.15);padding:0.3rem 0.6rem;border-radius:6px;font-size:0.82rem;">📍 <span id="prevZona">Lurín</span></span>
+                <span style="background:rgba(255,255,255,0.15);padding:0.3rem 0.6rem;border-radius:6px;font-size:0.82rem;">📲 <span id="prevWa">51903227351</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarifario y Generador de Propuestas para Cobrar -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>💼 Precios piloto y contacto con viveros</h2>
+              <p style="color:#5f7069;margin:0.2rem 0 0;font-size:0.88rem;">Los precios son referenciales para experimentar, no una tarifa validada ni una promesa de alcance.</p>
+            </div>
+          </div>
+          <div class="admin-form-grid">
+            <div class="form-group">
+              <label>Promoción destacada de prueba</label>
+              <input type="text" id="rateWeekly" value="A coordinar durante el piloto" />
+            </div>
+            <div class="form-group">
+              <label>Perfil mensual (por validar)</label>
+              <input type="text" id="rateMonthly" value="Por validar con viveros" />
+            </div>
+            <div class="form-group">
+              <label>Promoción de ubicación</label>
+              <input type="text" id="rateMap" value="Por validar con viveros" />
+            </div>
+            <div class="form-group">
+              <label>Paquete de visibilidad (por validar)</label>
+              <input type="text" id="ratePack" value="Por validar con viveros" />
+            </div>
+            <div class="form-group full">
+              <label>Mensaje comercial prearmado para enviar a clientes:</label>
+              <textarea id="salesPitchText" rows="4" readonly style="background:#f4f6f0;font-family:monospace;font-size:0.85rem;"></textarea>
+              <div style="margin-top:0.5rem;display:flex;gap:0.5rem;">
+                <button id="btnCopyPitch" class="btn btn-secondary" type="button">Copiar Mensaje</button>
+                <button id="btnSendPitchWa" class="btn btn-primary" type="button">Enviar por WhatsApp a un Vivero</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: VIVEROS Y MAPA -->
+      <section id="tab-viveros" class="admin-tab-pane">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2 id="viveroFormTitle">Añadir Nuevo Productor / Vivero</h2>
+              <p style="color:#5f7069;margin:0.2rem 0 0;font-size:0.88rem;">Registra los datos del vivero y haz clic en el mapa para fijar su ubicación exacta.</p>
+            </div>
+            <button id="btnCancelEditVivero" class="btn btn-secondary btn-mini" style="display:none;" type="button">Cancelar Edición</button>
+          </div>
+
+          <form id="formVivero" class="admin-form-grid">
+            <input type="hidden" id="viveroEditId" value="" />
+            <div class="form-group">
+              <label for="viveroNombre">Nombre del Vivero / Negocio *</label>
+              <input type="text" id="viveroNombre" required placeholder="Ej.: Vivero Las Palmas de Lurín" />
+            </div>
+            <div class="form-group">
+              <label for="viveroProductor">Nombre del Productor / Contacto</label>
+              <input type="text" id="viveroProductor" placeholder="Ej.: Don Juan Pérez" />
+            </div>
+            <div class="form-group">
+              <label for="viveroZona">Zona / Distrito *</label>
+              <select id="viveroZona">
+                <option value="Lurín">Lurín</option>
+                <option value="Villa El Salvador">Villa El Salvador</option>
+                <option value="Acho / Rímac">Acho / Rímac</option>
+                <option value="Carabayllo">Carabayllo</option>
+                <option value="Huachipa">Huachipa / Chosica</option>
+                <option value="Pachacámac">Pachacámac</option>
+                <option value="La Molina">La Molina</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="viveroWhatsApp">WhatsApp del Vivero (código 51 sin espacios) *</label>
+              <input type="text" id="viveroWhatsApp" required placeholder="Ej.: 51987654321" />
+            </div>
+            <div class="form-group full">
+              <label for="viveroDireccion">Dirección exacta o referencia</label>
+              <input type="text" id="viveroDireccion" placeholder="Ej.: Antigua Panamericana Sur Km 35, frente a..." />
+            </div>
+            <div class="form-group">
+              <label for="viveroEspecialidad">Especialidad de Plantas</label>
+              <input type="text" id="viveroEspecialidad" placeholder="Ej.: Bugambilias, Ficus, Palmeras, Frutales..." />
+            </div>
+            <div class="form-group full">
+              <label for="viveroDescripcion">Descripción del vivero</label>
+              <textarea id="viveroDescripcion" rows="3" placeholder="Qué ofrece el vivero, para quién y qué opciones de recojo o despacho tiene."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="viveroIcono">Icono o Emoji distintivo</label>
+              <input type="text" id="viveroIcono" value="🌿" placeholder="🌺, 🌿, 🍋, 🪴..." />
+            </div>
+            <div class="form-group">
+              <label class="form-check" style="margin-top:1.5rem;">
+                <input type="checkbox" id="viveroEsVip" />
+                <strong>¿Es Vivero Patrocinado / VIP? (Pin dorado)</strong>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="viveroImageFile">Subir Foto o Logo del Vivero</label>
+              <input type="file" id="viveroImageFile" accept="image/*" />
+              <input type="text" id="viveroImageUrl" placeholder="O pega URL de foto" />
+            </div>
+
+            <!-- Coordenadas y selector en mapa -->
+            <div class="form-group full">
+              <label>📍 Ubicación GPS en el Mapa de Lima (Haz clic en el mapa para marcar):</label>
+              <div style="display:flex;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+                <div style="flex:1;">
+                  <small>Latitud:</small>
+                  <input type="number" step="0.0001" id="viveroLat" value="-12.2749" />
+                </div>
+                <div style="flex:1;">
+                  <small>Longitud:</small>
+                  <input type="number" step="0.0001" id="viveroLng" value="-76.8719" />
+                </div>
+                <div style="display:flex;align-items:end;gap:0.4rem;">
+                  <button type="button" class="btn btn-secondary btn-mini" onclick="setQuickCoords(-12.2749, -76.8719)">Lurín</button>
+                  <button type="button" class="btn btn-secondary btn-mini" onclick="setQuickCoords(-12.2085, -76.9360)">VES</button>
+                  <button type="button" class="btn btn-secondary btn-mini" onclick="setQuickCoords(-12.0402, -77.0225)">Acho</button>
+                  <button type="button" class="btn btn-secondary btn-mini" onclick="setQuickCoords(-11.8900, -77.0350)">Carabayllo</button>
+                </div>
+              </div>
+              <div id="adminMapPicker"></div>
+            </div>
+
+            <div class="form-group full" style="margin-top:1rem;">
+              <button id="btnSaveVivero" class="btn btn-primary" type="submit">Guardar Productor / Vivero</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabla de Viveros Registrados -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2>Directorio de Viveros Registrados (<span id="viverosCount">0</span>)</h2>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Vivero / Productor</th>
+                  <th>Zona</th>
+                  <th>Especialidad</th>
+                  <th>WhatsApp</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="viverosTableBody">
+                <!-- Se llena dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: CATÁLOGO DE PLANTAS -->
+      <section id="tab-productos" class="admin-tab-pane">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2 id="productoFormTitle">Añadir Planta o Insumo al Catálogo</h2>
+              <p style="color:#5f7069;margin:0.2rem 0 0;font-size:0.88rem;">Sube fotos reales, define precios mayoristas y asocia la planta a su vivero productor.</p>
+            </div>
+            <button id="btnCancelEditProducto" class="btn btn-secondary btn-mini" style="display:none;" type="button">Cancelar Edición</button>
+          </div>
+
+          <form id="formProducto" class="admin-form-grid">
+            <input type="hidden" id="productoEditId" value="" />
+            <div class="form-group">
+              <label for="prodNombre">Nombre de la Planta *</label>
+              <input type="text" id="prodNombre" required placeholder="Ej.: Bugambilia imperial, Ficus..." />
+            </div>
+            <div class="form-group">
+              <label for="prodCategoria">Categoría *</label>
+              <select id="prodCategoria">
+                <option value="Ornamentales">Ornamentales</option>
+                <option value="Frutales">Frutales</option>
+                <option value="Suculentas">Suculentas</option>
+                <option value="Flores">Flores</option>
+                <option value="Macetas e insumos">Macetas e insumos</option>
+                <option value="Árboles y Cercos">Árboles y Cercos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prodViveroSelect">Vivero de Origen</label>
+              <select id="prodViveroSelect">
+                <!-- Dinámico -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prodZona">Zona de Recojo</label>
+              <input type="text" id="prodZona" placeholder="Ej.: Lurín, Villa El Salvador..." />
+            </div>
+            <div class="form-group">
+              <label for="prodTamano">Tamaño / Presentación</label>
+              <input type="text" id="prodTamano" placeholder="Ej.: Mediana 80cm, Bolsa 10L, Maceta N°12" />
+            </div>
+            <div class="form-group">
+              <label for="prodPrecio">Precio Referencial Mayorista</label>
+              <input type="text" id="prodPrecio" placeholder="Ej.: Desde S/18, S/3.50, Cotizar..." />
+            </div>
+            <div class="form-group">
+            <label for="prodPrecioNum">Precio numérico para ordenar</label>
+            <input type="number" min="0" step="0.01" id="prodPrecioNum" placeholder="Ej.: 18" />
+            </div>
+            <div class="form-group">
+              <label for="prodMinimo">Compra Mínima</label>
+              <input type="text" id="prodMinimo" placeholder="Ej.: Mín. 12 unidades, Mín. 5 bolsas..." />
+            </div>
+            <div class="form-group">
+              <label for="prodStock">Disponibilidad</label>
+              <input type="text" id="prodStock" placeholder="Ej.: 30 unidades; stock sujeto a confirmación" />
+            </div>
+            <div class="form-group">
+              <label for="prodImageFile">Subir Imagen Real (desde tu PC)</label>
+              <input type="file" id="prodImageFile" accept="image/*" />
+              <input type="text" id="prodImageUrl" placeholder="O pega ruta de imagen (ej.: assets/bugambilia.jpg)" />
+            </div>
+            <div class="form-group">
+              <label for="prodVideoUrl">Enlace de Video (opcional)</label>
+              <input type="text" id="prodVideoUrl" placeholder="Video de YouTube o archivo MP4" />
+            </div>
+            <div class="form-group">
+              <label for="prodRecojo">Dirección o punto de recojo</label>
+              <input type="text" id="prodRecojo" placeholder="Ej.: Lurín, confirmar punto por WhatsApp" />
+            </div>
+            <div class="form-group">
+              <label for="prodFechaFoto">Fecha de foto o revisión de stock</label>
+              <input type="text" id="prodFechaFoto" placeholder="Ej.: 21 de octubre de 2026" />
+            </div>
+            <div class="form-group full">
+              <label for="prodEstado">Estado visible de la planta</label>
+              <input type="text" id="prodEstado" placeholder="Ej.: Floración activa; fotos y stock por confirmar" />
+            </div>
+            <div class="form-group">
+              <label for="prodIcono">Emoji de Respaldo</label>
+              <input type="text" id="prodIcono" value="🌿" />
+            </div>
+            <div class="form-group">
+              <label class="form-check" style="margin-top:1.5rem;">
+                <input type="checkbox" id="prodEsDestacado" />
+                <strong>⭐ Destacar en el catálogo (Aparece primero)</strong>
+              </label>
+            </div>
+            <div class="form-group full">
+              <label for="prodDesc">Descripción y condiciones de recojo</label>
+              <textarea id="prodDesc" rows="3" placeholder="Detalles de la planta, colores disponibles, condiciones de transporte..."></textarea>
+            </div>
+            <div class="form-group full">
+              <button id="btnSaveProducto" class="btn btn-primary" type="submit">Guardar Producto en el Catálogo</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Lista de Productos en Catálogo -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2>Catálogo Publicado (<span id="productosCount">0</span> plantas)</h2>
+            <input type="text" id="searchAdminProd" placeholder="Filtrar planta en la lista..." style="padding:0.4rem 0.8rem;border-radius:6px;border:1px solid #cdd6cb;font-size:0.85rem;" />
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Foto</th>
+                  <th>Planta / Especie</th>
+                  <th>Categoría</th>
+                  <th>Vivero / Zona</th>
+                  <th>Precio</th>
+                  <th>Mínimo</th>
+                  <th>Stock</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="productosTableBody">
+                <!-- Se llena dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: AJUSTES Y EXPORTACIÓN -->
+      <section id="tab-config" class="admin-tab-pane">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2>⚙️ Configuración General y Guardado en Archivos</h2>
+          </div>
+          <div class="admin-form-grid">
+            <div class="form-group">
+              <label for="confNombre">Nombre del vivero principal</label>
+              <input type="text" id="confNombre" value="Red Vivero Lima" />
+            </div>
+            <div class="form-group">
+              <label for="confWa">WhatsApp de contacto</label>
+              <input type="text" id="confWa" value="51903227351" />
+            </div>
+            <div class="form-group full">
+              <label for="confFecha">Texto de Última Actualización</label>
+              <input type="text" id="confFecha" value="20 de octubre de 2026 · Catálogo al día" />
+            </div>
+            <div class="form-group full">
+              <label for="confGmapsKey">API Key de Google Maps (Opcional)</label>
+              <input type="text" id="confGmapsKey" placeholder="Pega aquí tu clave: AIzaSy..." />
+              <small>Si la dejas en blanco, la web utiliza el mapa interactivo gratuito por defecto (sin límites ni costos).</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2>💾 ¿Cómo actualizar el catálogo público?</h2>
+          </div>
+          <div style="line-height:1.6;color:#354d42;font-size:0.95rem;">
+            <ol>
+              <li>Haz clic en <strong>Exportar catálogo para publicar</strong>.</li>
+              <li>En GitHub, abre el repositorio <strong>red-vivero-lima</strong> y reemplaza el archivo <code>data.js</code> por el descargado.</li>
+              <li>Confirma el cambio con <strong>Commit changes</strong>. GitHub Pages publicará el nuevo catálogo.</li>
+            </ol>
+            <p>Los cambios guardados aquí solo existen en este navegador hasta que exportes el archivo y lo publiques. No subas el panel local a GitHub.</p>
+          </div>
+          <hr style="border:0;border-top:1px solid #edf2eb;margin:1.5rem 0;" />
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <button id="btnResetDefaults" class="btn btn-secondary" type="button">🔄 Restaurar Datos Iniciales</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Notificación Toast Flotante -->
+    <div id="toastMessage">
+      <span id="toastIcon">✅</span>
+      <span id="toastText">Cambios guardados con éxito.</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="data.js"></script>
+    <script src="backend-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

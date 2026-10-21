@@ -40,10 +40,10 @@ window.RED_VIVERO_CONFIG = {
       }
     ],
     tarifarioSugerido: {
-      portadaSemanal: "S/ 80",
-      portadaMensual: "S/ 250",
-      pinVipMapa: "S/ 50 / mes",
-      packCompleto: "S/ 320 / mes (Portada + Mapa + Top Catálogo)"
+      portadaSemanal: "A coordinar durante el piloto",
+      portadaMensual: "Por validar con viveros",
+      pinVipMapa: "Por validar con viveros",
+      packCompleto: "Por validar con viveros"
     }
   },
 

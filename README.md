@@ -1,82 +1,48 @@
 # Vivero Contreras — catálogo de plantas y viveros aliados
 
-El sitio presenta primero el catálogo y la información de Vivero Contreras. La estructura también permite incorporar viveros aliados y sus productos. Todas las consultas del sitio llegan al WhatsApp definido en `whatsappOperador`; la disponibilidad, los precios y las entregas deben confirmarse antes de cerrar cada pedido.
-
-## Configuración inicial
-
-1. Abre `data.js`.
-2. Cambia `nombre` si quieres usar otro nombre.
-3. Configura `whatsappOperador` con tu WhatsApp Business: código `51` + tu número, sin `+`, espacios o guiones.
-4. `viveroPrincipalId` identifica el vivero que aparece primero. Actualiza su perfil y los productos en `viveros` y `productos`.
-5. Cambia `fechaActualizacion` y publica solo disponibilidad que hayas confirmado. Retira los productos que ya no estén disponibles.
-6. Abre `index.html` para probar el catálogo y verifica que las consultas de producto, vivero y solicitud abran tu WhatsApp.
-
-El panel experimental de administración no se publica: es local al navegador, no sincroniza los cambios con GitHub y su clave no es una protección real. Para añadir un vivero aliado, agrega su ficha a `viveros` y vincula sus productos mediante `viveroId` en `data.js`.
+El sitio presenta el catálogo de Vivero Contreras y permite incorporar viveros aliados. Las consultas llegan al WhatsApp definido por `whatsappOperador`; confirma disponibilidad, precios y condiciones de entrega directamente antes de cerrar cada venta.
 
 ## Sitio publicado
 
-El proyecto se publica con GitHub Pages en `https://brunoplusx4.github.io/red-vivero-lima/`.
+El catálogo se publica con GitHub Pages en `https://brunoplusx4.github.io/red-vivero-lima/`. El panel independiente está en `https://brunoplusx4.github.io/red-vivero-lima/admin.html`.
 
-Para actualizar el catálogo, edita `data.js`, confirma precios y stock, actualiza `fechaActualizacion` y publica los cambios en la rama `main`. Las consultas de la web se dirigen al WhatsApp indicado en `whatsappOperador`.
+## Activar la administración en línea
 
-```powershell
-git add index.html styles.css app.js data.js README.md assets
-git commit -m "Publicar catálogo de Vivero Contreras"
-git push origin main
-```
+GitHub Pages aloja la web y Supabase proporciona la base de datos, autenticación y almacenamiento de imágenes. El panel no podrá iniciar sesión ni sincronizar hasta completar estos pasos:
 
-Después de subirlos, espera la publicación de GitHub Pages y prueba el enlace desde un celular.
+1. Crea un proyecto en Supabase. Desactiva el registro público en Authentication y crea tu usuario administrador.
+2. En **SQL Editor**, ejecuta el contenido completo de `supabase-schema.sql`.
+3. Asigna el rol de administrador a tu usuario. Reemplaza el correo por el de tu cuenta y confirma que se actualizó una fila:
 
-## Configurar WhatsApp Business (30 minutos)
-
-Usa un número exclusivo si es posible. No conectes automatizaciones ni envíes mensajes masivos.
-
-1. Instala **WhatsApp Business** desde la tienda oficial.
-2. Registra el número que pondrás en `data.js`.
-3. Perfil de empresa:
-   - Nombre: `Vivero Contreras`
-   - Categoría: `Servicio empresarial` o `Compras y ventas`
-   - Descripción: `Vivero de plantas ornamentales en Lurín. Consulta disponibilidad, tamaños, precios y opciones de recojo por WhatsApp.`
-4. Configura mensaje de bienvenida:
-
-   ```text
-   Hola, gracias por escribir a Vivero Contreras.
-   Para ayudarte, indícanos: planta, cantidad, tamaño y distrito.
-   Confirmaremos disponibilidad, precio y opciones de recojo o entrega.
+   ```sql
+   update auth.users
+   set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb)
+       || '{"role":"catalog_admin"}'::jsonb
+   where email = 'TU_CORREO';
    ```
 
-5. Configura respuestas rápidas:
+   Cierra sesión e inicia sesión nuevamente para que Supabase emita un token con el rol actualizado.
+4. En **Project Settings → API Keys**, copia la **Project URL** y la clave pública **Publishable** (o la clave pública `anon` heredada). Configúralas en `backend-config.js`:
 
-   ```text
-   /solicitud
-   Indica: planta, cantidad, tamaño, fecha requerida y distrito para recojo/entrega.
-
-   /stock
-   Te compartimos disponibilidad referencial. Antes de separar, confirma directamente con el productor.
-
-   /reglas
-   Confirma disponibilidad, precio y condiciones de recojo o entrega antes de separar o pagar tu pedido.
-
-   /productor
-   Para sumar un vivero necesitamos: nombre, zona, contacto autorizado, especialidad, fotos reales y productos disponibles.
+   ```js
+   window.VIVERO_BACKEND_CONFIG = {
+     supabaseUrl: "TU_PROJECT_URL",
+     supabaseAnonKey: "TU_CLAVE_PUBLICA"
+   };
    ```
 
-6. Crea etiquetas de seguimiento según tu operación, por ejemplo: `Cliente nuevo`, `Solicitud nueva`, `En seguimiento`, `Pedido coordinado`, `Cerrada`.
+   La URL y la clave pública están diseñadas para el navegador. **Nunca** uses en el sitio una clave `Secret`, `service_role` ni una contraseña.
+5. Publica los cambios del repositorio en GitHub. La primera sesión autorizada inicializa el catálogo de Supabase a partir de `data.js`.
+6. Abre el panel desde el teléfono e inicia sesión. Desde el menú del navegador puedes añadirlo a la pantalla de inicio. Al guardar, los cambios se sincronizan con Supabase y la web pública vuelve a consultar el catálogo cada minuto.
 
-7. Envía el enlace del sitio solo a personas que acepten recibirlo. No copies el mismo mensaje a grupos ni contactos no interesados.
+Las políticas RLS del esquema permiten leer el catálogo y solo permiten cambios a usuarios con `app_metadata.role = catalog_admin`. Las imágenes admitidas son JPG, PNG, WebP o GIF, con un límite de 5 MB. El bucket sirve las imágenes públicamente para mostrarlas en el catálogo.
 
-## Para añadir fotos
+Si Supabase no responde, la página muestra los datos iniciales de `data.js` con un aviso de que podrían estar desactualizados. Verifica conexión y disponibilidad antes de confirmar precios o stock.
 
-El proyecto incluye imágenes en `assets/`. Usa solo fotos propias o autorizadas; guarda las nuevas imágenes allí y actualiza la propiedad `imagen` del vivero o producto correspondiente en `data.js`. Comprime las fotos para que el catálogo cargue rápido.
+## Copia de seguridad
 
-## Regla de seguridad y confianza
+El botón **Descargar copia** del panel exporta una copia local `data.js`. En el flujo normal no es necesario reemplazar ese archivo ni volver a publicar GitHub Pages para cada cambio. `data.js` queda como catálogo inicial y respaldo.
 
-- Nunca recibas pagos de separación durante el piloto: comprador paga directo al productor.
-- Nunca publiques dirección privada ni teléfono de un productor sin permiso.
-- No prometas inventario; escribe siempre `Stock sujeto a confirmación`.
-- No agregues un proveedor solo porque envió un mensaje: usa referencias o una validación presencial.
-- No te responsabilices por transporte, estado de la planta o entregas hasta que exista un acuerdo formal separado.
+## WhatsApp Business
 
-## Para añadir fotos reales después
-
-Comprueba que la foto corresponde al producto anunciado y que tienes autorización para publicarla.
+Configura `whatsappOperador` en el catálogo con el código de país y número, sin `+`, espacios ni guiones. Todas las consultas públicas se dirigen a ese número. Usa un perfil de WhatsApp Business con el nombre y la descripción de tu vivero, y confirma pedidos y pagos directamente con el comprador.

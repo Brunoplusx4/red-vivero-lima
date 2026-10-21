@@ -1,8 +1,8 @@
 (() => {
-  // Cargar configuración desde localStorage si existe, o usar data.js
+  // La configuración en la nube, cuando existe, se carga después de iniciar la página.
   const STORAGE_KEY = "redViveroCustomConfig";
   const customConfig = localStorage.getItem(STORAGE_KEY);
-  const config = customConfig ? JSON.parse(customConfig) : window.RED_VIVERO_CONFIG;
+  let config = customConfig ? JSON.parse(customConfig) : window.RED_VIVERO_CONFIG;
 
   const $ = selector => document.querySelector(selector);
   const $$ = selector => document.querySelectorAll(selector);
@@ -627,11 +627,43 @@
     }
   }
 
+  function renderCatalogDataNotice(message) {
+    const notice = $("#catalogDataNotice");
+    if (!notice) return;
+    notice.textContent = message;
+    notice.hidden = !message;
+  }
+
+  async function loadCloudCatalog() {
+    if (!window.ViveroCloud?.isConfigured()) return;
+
+    try {
+      const remoteConfig = await window.ViveroCloud.loadCatalog();
+      if (!remoteConfig) {
+        renderCatalogDataNotice("El catálogo en línea aún no está configurado. Se muestran los datos iniciales.");
+        return;
+      }
+
+      config = remoteConfig;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+      renderCatalogDataNotice("");
+      initBrand();
+      renderVipAd();
+      initSearchAndFilters();
+      renderCatalog();
+      initLeafletMap();
+      renderNurseriesGrid();
+    } catch (error) {
+      console.error("No se pudo cargar el catálogo en línea:", error);
+      renderCatalogDataNotice("No se pudo actualizar el catálogo en línea. La información mostrada puede estar desactualizada.");
+    }
+  }
+
   // Sincronización en tiempo real si el admin guarda cambios en otra pestaña
   window.addEventListener("storage", e => {
     if (e.key === STORAGE_KEY && e.newValue) {
       const updated = JSON.parse(e.newValue);
-      Object.assign(config, updated);
+      config = updated;
       initBrand();
       renderVipAd();
       initSearchAndFilters();
@@ -653,4 +685,8 @@
   initRequestForm();
   initActions();
   initSecretAdminShortcut();
+  loadCloudCatalog();
+  window.setInterval(() => {
+    if (document.visibilityState === "visible") loadCloudCatalog();
+  }, 60000);
 })();
