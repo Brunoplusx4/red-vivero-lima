@@ -3,7 +3,7 @@
   Puedes editar este archivo directamente o gestionarlo visualmente desde admin.html
 */
 window.RED_VIVERO_CONFIG = {
-  nombre: "Vivero Contreras",
+  nombre: "Red de Viveros Lima",
   whatsappOperador: "51903227351",
   viveroPrincipalId: "vivero-contreras",
   googleMapsApiKey: "", // PEGA AQUÍ TU API KEY DE GOOGLE MAPS (Ejemplo: "AIzaSy...")
@@ -60,6 +60,22 @@ window.RED_VIVERO_CONFIG = {
       whatsapp: "51903227351",
       esVip: true,
       badge: "Vivero Verificado VIP ⭐",
+      especialidad: "Bugambilias, ficus, palmeras y ornamentales",
+      logo: "🌺",
+      imagen: "assets/vivero_destacado.jpg",
+      descripcion: "Centro productor líder con cultivo a gran escala de bugambilias en varios colores, ficus y palmeras con despacho a todo Lima y retiro en camión."
+    },
+    {
+      id: "vivero-moscoso",
+      nombre: "Vivero Moscoso",
+      productor: "Familia Moscoso / sr moscoso maldonado",
+      zona: "Pachacamác",
+      direccion: "Antigua Panamericana Sur Km 35, Lurín",
+      lat: -12.2749,
+      lng: -76.8719,
+      whatsapp: "51903227351",
+      esVip: false,
+      badge: "Vivero aliado",
       especialidad: "Bugambilias, ficus, palmeras y ornamentales",
       logo: "🌺",
       imagen: "assets/vivero_destacado.jpg",
